@@ -1,7 +1,8 @@
-const cart = {
+function Cart(localStorageKey) {
+    const cart = {
     cartItems: undefined,
     loadFromStorage() {
-        this.cartItems = JSON.parse(localStorage.getItem('cart-oop')) || [
+        this.cartItems = JSON.parse(localStorage.getItem(localStorageKey)) || [
             {
                 productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
                 quantity: 2,
@@ -15,7 +16,7 @@ const cart = {
     },
 
     saveToStorage() {
-        localStorage.setItem('cart-oop', JSON.stringify(this.cartItems))
+        localStorage.setItem(localStorageKey, JSON.stringify(this.cartItems))
     },
 
     addToCart(productId) {
@@ -65,5 +66,11 @@ const cart = {
     matchingItem.deliveryOptionId = deliveryOptionId;
     this.saveToStorage();
     }
-};
-cart.loadFromStorage();
+    };
+
+    return cart;
+}
+
+const cart = Cart('cart-oop');
+
+cart.loadFromStorage(); 
