@@ -1,15 +1,14 @@
 import { formatCurrency } from "../scripts/utils/money.js";
 
 export function getProduct(productId) {
-  let matchingProduct;
+  const productData = products.find((product) => product.id === productId);
+  if (!productData) return undefined;
 
-  products.forEach((product) => {
-      if (product.id === productId) {
-          matchingProduct = product;
-      }
-  });
+  if (productData.type === 'clothing') {
+    return new Clothing(productData);
+  }
 
-  return matchingProduct;
+  return new Product(productData);
 }
 
 class Product {
@@ -28,6 +27,25 @@ class Product {
 
   getPrice() {
     return `$${formatCurrency(this.priceCents)}`;
+  }
+
+  extraInfoHTML() {
+    return  ``;
+  }
+}
+
+class Clothing extends Product{
+  sizeChartLink;
+  
+  constructor(productDetails) {
+    super(productDetails);
+    this.sizeChartLink = productDetails.sizeChartLink;
+  }
+
+  extraInfoHTML() {
+    return  `
+      <a href="${this.sizeChartLink}" target="_blank" >Size Chart</a>
+    `;
   }
 }
 
@@ -691,7 +709,11 @@ export const products = [
     ]
   }
 ].map((productDetails) => {
+  if (productDetails.type = 'clothing') {
+    return new Clothing(productDetails);
+  }
   return new Product(productDetails);
 });
 
 console.log(products);
+
